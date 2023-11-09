@@ -21,7 +21,7 @@ metadata:
 spec:
   accessModes:
     - ReadWriteOnce
-  storageClassName: efs-wordpress-sc
+  storageClassName: ebs-wordpress-sc
   resources:
     requests:
       storage: 20Gi
