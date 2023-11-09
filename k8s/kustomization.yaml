@@ -7,3 +7,4 @@ resources:
   - mysql-deployment.yaml
   - wordpress-deployment.yaml
   - wordpress-sc.yaml
+  - ingress.yaml
