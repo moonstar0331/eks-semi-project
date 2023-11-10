@@ -11,6 +11,7 @@ spec:
     app: wordpress
     tier: frontend
   type: LoadBalancer
+  loadBalancerClass: service.k8s.aws/nlb
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
