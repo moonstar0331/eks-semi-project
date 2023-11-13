@@ -18,3 +18,55 @@ spec:
   clusterIP: None
   selector:
     app: mysql
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mysql-app
+spec:
+  selector:
+    matchLabels:
+      app: mysql 
+  serviceName: "mysql-headless"
+  replicas: 2
+  minReadySeconds: 10
+  template:
+    metadata:
+      labels:
+        app: mysql 
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: mysql
+        image: mysql:5.6
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: DB_Password
+        ports:
+        - containerPort: 3306
+          name: mysql
+        volumeMounts:
+        - name: mps
+          mountPath: /usr/share/mysql/html
+        resources:
+          requests:
+            cpu: 1
+            memory: 2Gi
+        livenessProbe:
+          exec:
+            command: ["mysqladmin", "-uroot", "-p$MYSQL_ROOT_PASSWORD", "ping"]
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+  volumeClaimTemplates:
+  - metadata:
+      name: mps
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: gp2
+      resources:
+        requests:
+          storage: 1Gi
